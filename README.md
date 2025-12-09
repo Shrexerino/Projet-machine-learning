@@ -1,42 +1,43 @@
-Project Overview:
+This Data Science project aims to develop a robust Machine Learning model capable of predicting corporate bankruptcy based on financial indicators. The objective is to assist financial institutions in anticipating default risks by analyzing quantitative data.
 
-This project aims to develop a robust machine learning pipeline to predict company bankruptcy based on a dataset of financial ratios and attributes.
-The primary objective is to classify companies as either "Financially Stable" or "Financially Unstable" by analyzing complex patterns in their economic data.
-A significant challenge of this analysis is the highly imbalanced nature of the dataset, where actual bankruptcy cases are rare compared to stable companies.
+Context and Challenge
+The dataset contains financial information on approximately 7000 companies. The primary challenge lies in the severe class imbalance, as stable companies represent about 96.7% of the data, while companies in bankruptcy account for only 3.3%.
 
-Methodology and Workflow :
+Given this distribution, a simple accuracy metric would be misleading. We therefore focus our performance analysis on the AUC-ROC score and Recall. This approach ensures we minimize false negatives, which corresponds to the critical error of predicting a company is stable when it is actually heading toward bankruptcy.
 
-Our approach follows a structured data science lifecycle, designed to handle high-dimensional numerical data and class imbalance:
+Methodology
+Data Preprocessing The data cleaning process involves standardizing column names and removing constant variables. We applied logarithmic transformations (np.log1p) to skewed financial features to normalize their distributions. Finally, we used StandardScaler to center and reduce the data for optimal model performance.
 
-Data Preprocessing and Sanity Check:
-- Cleaning: Standardization of column names and removal of constant features (zero variance).
-- Outlier Management: We performed a deep statistical analysis (histograms and boxplots) to identify features with extreme skewness.
-  We applied Log Transformations (log(1+x)) to specific non-fractional features where the tail distribution was too heavy, ensuring better model stability.
+Handling Imbalance To prevent the models from biasing towards the majority class, we implemented specific strategies. These include using SMOTE (Synthetic Minority Over-sampling Technique) within training pipelines, assigning balanced class weights for tree-based models, and using stratified sampling during the train/test split.
 
-Feature Engineering:
-- Scaling: Implementation of StandardScaler to normalize all features to a zero mean and unit variance.
-- Feature Selection: Usage of Mutual Information Classification to filter out noise and retain only the variables that share a significant dependency with the target variable.
+Modeling We trained and compared several algorithms using Imbalanced Pipelines and optimized hyperparameters via GridSearchCV. The models evaluated include Logistic Regression (Baseline), Support Vector Machine (SVM), Random Forest, Gradient Boosting, Voting Classifier, and Stacking Classifier.
 
-Handling Class Imbalance (SMOTE):
-To address the scarcity of positive bankruptcy cases, we utilized SMOTE (Synthetic Minority Oversampling Technique).
-This technique generates synthetic examples in the feature space for the minority class, ensuring the models are trained on a balanced distribution (50/50) rather than being biased toward the majority class.
+Results and Performance
+The Stacking Classifier emerged as the top-performing model on the test set, achieving an AUC-ROC of 0.956. By combining the predictive strengths of Random Forest and Gradient Boosting, it offers the most reliable predictions. The Gradient Boosting model followed closely with an AUC of 0.951, while the Voting Classifier achieved 0.947.
 
-Modeling Strategy: We implemented and compared a variety of classifiers to evaluate linear vs. non-linear performance:
-- Logistic Regression (with ElasticNet regularization) as a baseline.
-- Support Vector Classifier (SVC) for high-dimensional margin separation.
-- Ensemble Methods: Gradient Boosting and AdaBoost to leverage decision trees for capturing complex non-linear relationships.
+Feature Importance and Interpretability
+While the Stacking Classifier provides the best predictive performance, it operates as a "black box." To understand the critical financial factors driving bankruptcy, we rely on the Random Forest model, which offers excellent intrinsic interpretability.
 
-Requirements:
-To reproduce this analysis, the following Python libraries are required:
-- pandas and numpy (Data manipulation)
-- matplotlib and seaborn (Visualization)
-- scikit-learn (Modeling and preprocessing)
-- imbalanced-learn (SMOTE implementation)
+Our analysis identifies the following indicators as the most determinant:
 
-Bash:
-pip install pandas numpy matplotlib seaborn scikit-learn imbalanced-learn
+Debt Ratio % This measures the overall level of indebtedness and is the strongest predictor of distress.
 
-Usage:
-- Clone the repository.
-- Ensure the dataset path is correctly set in the notebook.
-- Run "Bankruptcy_Detection.ipynb" to execute the preprocessing pipeline and train the models.
+Current Liability to Assets This ratio highlights the proportion of short-term debts relative to total assets.
+
+Borrowing Dependency This metric indicates the company's reliance on external financing to sustain operations.
+
+Net Income to Total Assets Also known as Return on Assets (ROA), this measures the profitability and efficiency of the company.
+
+These findings confirm that solvency and liquidity are the primary levers of financial health within this dataset.
+
+Installation and Usage
+To reproduce this analysis, ensure you have the necessary dependencies installed.
+
+First, clone the repository to your local machine.
+
+Next, install the required Python libraries using pip: pandas, numpy, matplotlib, seaborn, scikit-learn, and imbalanced-learn.
+
+Finally, open the file Bankruptcy_Detection.ipynb using Jupyter Notebook or Jupyter Lab. Please ensure the data.csv file is present in the same directory as the notebook before running the cells.
+
+Business Conclusion
+The final model successfully detects approximately 95% of potential bankruptcies based on the AUC score. For a banking institution, this model serves as an effective Early Warning System, allowing risk managers to intervene before a client's financial situation becomes critical.
