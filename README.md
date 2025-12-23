@@ -1,4 +1,4 @@
-This Data Science project aims to develop a robust Machine Learning model capable of predicting corporate bankruptcy based on financial indicators. The objective is to assist financial institutions in anticipating default risks by analyzing quantitative data.
+This project aims to develop a robust Machine Learning model capable of predicting corporate bankruptcy based on financial indicators. The objective is to assist financial institutions in anticipating default risks by analyzing quantitative data.
 
 Context and Challenge
 
